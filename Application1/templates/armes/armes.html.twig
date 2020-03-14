@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Armes{% endblock %}
+
+{% block titre %}La liste des armes{% endblock %}
+
+{% block body %}
+{% for arme in armes %}
+    <div class="row">
+        <div class="col-2">
+            <img src="{{ asset('images/armes/' ~ arme.nom|replace({'é':'e'}) ~ '.png') }}" alt="">
+        </div>
+        <div>
+            <a href="{{ path('arme', {'nom': arme.nom }) }}">{{ arme.nom }}</a>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Personnages{% endblock %}
+
+{% block titre %}Liste de personnages{% endblock %}
+
+{% block body %}
+    <table class="table">
+        <tr class="thead-dark">
+            <th>Image</th>
+            <th>Nom</th>
+            <th>Age</th>
+            <th>Sexe</th>
+            <th>Force</th>
+            <th>Agilité</th>
+            <th>Intelligence</th>
+        </tr>
+        {% for player in players %}
+        <tr>
+            <td><img src="{{ asset('images/personnages/' ~ player.pseudo|lower ~ '.png') }}"  alt=""></td>
+            <td><a href="{{ path('personnage', {'pseudo' : player.pseudo|lower }) }}">{{ player.pseudo }}</a></td>
+            <td>{{ (player.sexe) ? 'Homme' : 'Femme' }}</td>
+            <td>{{ player.carac.force }}</td>
+            <td>{{ player.carac.agi }}</td>
+            <td>{{ player.carac.intel}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

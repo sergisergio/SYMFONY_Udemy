@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification {{ type.libelle }}{% endblock %}
+
+{% block titre %}
+    {% if isModification %}
+        Modifier {{ type.libelle }}
+    {% else %}    
+        Ajout d'une catégorie
+    {% endif %}    
+{% endblock %}
+{% block body %}
+<div class="container">
+    {{form_start(form)}}
+    <div class="row">
+        <div class="col-6">
+            {% if isModification %}
+            <img src="{{ asset('images/types/' ~ type.image )}}" alt="" style="width:25%;">
+            {% endif %}
+            <div>{{ form_row(form.imageFile) }}</div>
+            <div>{{ form_row(form.libelle, {"attr" : {'class':'text-danger bg-success'},"label":"Nom de l'aliment"})}}</div>
+        </div>
+        <div class="col-6">
+            <div>{{ form_widget(form) }}</div>
+        </div>
+    </div>
+        <input type="submit" value="enregistrer" class="btn btn-primary">
+    {{form_end(form)}}
+</div>
+{% endblock %}

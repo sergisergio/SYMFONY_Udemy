@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}continent{% endblock %}
+
+{% block titre %}{{ continent.libelle}}{% endblock %}
+
+{% block body %}
+    <h2 class="border-bottom border-primary">{{ continent.libelle }}</h2>
+    <div class="row">
+        {% for animal in continent.animal %}
+        <div class="col-6">
+            <div class="row align-items-center">
+                <div class="col-12 cold-md-6 col-lg-2 text-center">
+                    <img src="{{ asset('images/' ~ animal.image)}}" alt="" class="img-fluid">
+                </div>
+                <div class="col text-center">
+                    <a href="{{ path('animal', {'id': animal.id }) }}"><h2>{{ animal.nom }}</h2></a>
+                    <div>{{ animal.description }}</div>
+                    <div><a href="{{ path('famille', {id:animal.famille.id}) }}" class"btn btn-primary">{{ animal.famille.libelle }}</a></div>
+                    <div>
+                        {% for continentAnimal in animal.continents %}
+                            {% if continentAnimal.id != continent.id %}
+                            <a href="{{ path('continent', {'id': continentAnimal.id }) }}" class="btn btn-warning">{{ continentAnimal.libelle }}</a> 
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>    
+        {% endfor %}
+    </div>
+{% endblock %}
