@@ -5,61 +5,60 @@ namespace App\Controller\Admin;
 use App\Entity\Type;
 use App\Form\TypeType;
 use App\Repository\TypeRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TypeController extends AbstractController
 {
     /**
-     * @Route("/admin/type", name="admin_type")
+     * @Route("/admin/type", name="admin_types")
      */
     public function index(TypeRepository $repo)
     {
         $types = $repo->findAll();
-        return $this->render('admin/admin_type/adminType.html.twig', [
-            'types' => $types,
+        return $this->render('admin/type/adminType.html.twig',[
+            "types" => $types
         ]);
-    }  
-    
+    }
+
     /**
-     * @Route("/admin/type/ajout", name="admin_types_creation")
-     * @Route("/admin/type/{id}", name="modif_type", methods="GET|POST")
+     * @Route("/admin/type/create", name="ajoutType")
+     * @Route("/admin/type/{id}", name="modifType", methods="POST|GET")
      */
-    public function ajoutEtModif(Type $type = null, EntityManagerInterface $em, Request $request)
+    public function ajoutEtModif(Type $type = null,Request $request, ObjectManager $om)
     {
-        if(!$type) {
+        if(!$type){
             $type = new Type();
         }
 
         $form = $this->createForm(TypeType::class, $type);
+
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
-            $modif = $type->getId() !== null;
-            $em->persist($type);
-            $em->flush();
-            $this->addFlash("success", ($modif) ? "La modification a été effectuée" : "L'ajout a été effectué");
-            return $this->redirectToRoute("admin_type");
+        if($form->isSubmitted() && $form->isValid()){
+            $om->persist($type);
+            $om->flush();
+            $this->addFlash('success', "L'action a été réalisée");
+            return $this->redirectToRoute("admin_types");
         }
-        return $this->render('admin/admin_type/ajout_modif.html.twig', [
-            'type' => $type,
-            'form' => $form->createView(),
-            'isModification' => $type->getId() !== null
+
+        return $this->render('admin/type/ajoutEtModif.html.twig',[
+            "type" => $type,
+            "form" => $form->createView()
         ]);
-    }   
+    }
 
     /**
-     * @Route("/admin/type/{id}", name="admin_types_suppression", methods="delete")
+     * @Route("/admin/type/{id}", name="supType", methods="delete")
      */
-    public function supprimer(Type $type, EntityManagerInterface $em) {
-        //$submittedToken = $request->request->get('token');
-        //if($this->isCsrfTokenValid("SUP". $aliment->getId(), $submittedToken)) {
-            $em->remove($type);
-            $em->flush();
-            $this->addFlash("success", "La suppression a été effectuée");
-            return $this->redirectToRoute("admin_type"); 
-        //}
+    public function suppression(Type $type, ObjectManager $om, Request $request)
+    {
+       if($this->isCsrfTokenValid('SUP'.$type->getId(), $request->get('_token'))){
+           $om->remove($type);
+           $om->flush();
+           $this->addFlash('success', "L'action a été réalisée");
+           return $this->redirectToRoute("admin_types");
+       }
     }
 }

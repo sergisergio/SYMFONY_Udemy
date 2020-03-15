@@ -23,7 +23,7 @@ class TypeFixtures extends Fixture
         $alimentRepository = $manager->getRepository(Aliment::class);
 
         $a1 = $alimentRepository->findOneBy(["nom" => "Patate"]);
-        $a1->setType($t2);
+        $a1->setType($t1);
         $manager->persist($a1);
 
         $a2 = $alimentRepository->findOneBy(["nom" => "Tomate"]);
@@ -33,6 +33,10 @@ class TypeFixtures extends Fixture
         $a3 = $alimentRepository->findOneBy(["nom" => "Pomme"]);
         $a3->setType($t1);
         $manager->persist($a3);
+
+        $a4 = $alimentRepository->findOneBy(["nom" => "Carotte"]);
+        $a4->setType($t2);
+        $manager->persist($a4);
 
         $manager->flush();
     }

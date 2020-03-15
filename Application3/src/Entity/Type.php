@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -33,8 +33,8 @@ class Type
     private $image;
 
     /**
-     * @Vich\UploadableField(mapping="type_images", fileNameProperty="image")
-     */
+    * @Vich\UploadableField(mapping="type_image", fileNameProperty="image")
+    */
     private $imageFile;
 
     /**
@@ -43,9 +43,9 @@ class Type
     private $aliments;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
-    private $updated_at;
+    private $createdAt;
 
     public function __construct()
     {
@@ -81,28 +81,6 @@ class Type
         return $this;
     }
 
-    public function setImageFile(File $imageFile = null): self
-    {
-        $this->imageFile = $imageFile;
-        if ($this->imageFile instanceof UploadedFile) {
-            $this->updated_at = new \DateTime('now');
-        }
-        return $this;
-
-        // VERY IMPORTANT:
-        // It is required that at least one field changes if you are using Doctrine,
-        // otherwise the event listeners won't be called and the file is lost
-        //if ($image) {
-            // if 'updatedAt' is not defined in your entity, use another property
-            //$this->updatedAt = new \DateTime('now');
-        //}
-    }
-
-    public function getImageFile()
-    {
-        return $this->imageFile;
-    }
-
     /**
      * @return Collection|Aliment[]
      */
@@ -134,15 +112,30 @@ class Type
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->updated_at;
+        return $this->createdAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->createdAt = $createdAt;
 
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): self
+    {
+        $this->imageFile = $imageFile;
+
+        if($this->imageFile instanceof UploadedFile){
+            $this->createdAt = new \DateTime('now');
+        }
         return $this;
     }
 }

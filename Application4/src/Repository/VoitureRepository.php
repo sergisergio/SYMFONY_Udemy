@@ -4,9 +4,9 @@ namespace App\Repository;
 
 use App\Entity\RechercheVoiture;
 use App\Entity\Voiture;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Voiture|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,16 +23,18 @@ class VoitureRepository extends ServiceEntityRepository
 
     public function findAllWithPagination(RechercheVoiture $rechercheVoiture) : Query{
         $req = $this->createQueryBuilder('v');
-        if($rechercheVoiture->getMinAnnee()) {
+        if($rechercheVoiture->getMinAnnee()){
             $req = $req->andWhere('v.annee >= :min')
-                ->setParameter(':min', $rechercheVoiture->getMinAnnee());
+            ->setParameter(':min',$rechercheVoiture->getMinAnnee());
         }
-        if($rechercheVoiture->getMaxAnnee()) {
+        if($rechercheVoiture->getMaxAnnee()){
             $req = $req->andWhere('v.annee <= :max')
-                ->setParameter(':max', $rechercheVoiture->getMaxAnnee());
-        }   
+            ->setParameter(':max',$rechercheVoiture->getMaxAnnee());
+        }
+        
         return $req->getQuery();
     }
+
     // /**
     //  * @return Voiture[] Returns an array of Voiture objects
     //  */

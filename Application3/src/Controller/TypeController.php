@@ -14,8 +14,8 @@ class TypeController extends AbstractController
     public function index(TypeRepository $repo)
     {
         $types = $repo->findAll();
-        return $this->render('type/types.html.twig', [
-            'types' => $types,
+        return $this->render('type/types.html.twig',[
+            "lesTypes" => $types
         ]);
     }
 }

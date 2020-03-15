@@ -24,6 +24,7 @@ class AdminSecuController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
+            $user->setRoles("ROLE_USER");
             $em->persist($user);
             $em->flush();
             return $this->redirectToRoute('aliments');

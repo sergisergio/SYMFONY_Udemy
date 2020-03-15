@@ -1,14 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Erreur 404{% block title %}
+{% block title %}Error 404{% endblock %}
 
-{% block tite %}Erreur 404{% block title %}
-
+{% block monTitre %}
+    Page non trouvée
+{% endblock %}
 {% block body %}
-    <h1>Page inexistante</h1>
-
-    <p>
-        The requested page couldn't be located. Checkout for any URL
-        misspelling or <a href="{{ path('admin_aliment') }}">return to the homepage</a>.
-    </p>
+    La page demandée n'existe pas !
 {% endblock %}

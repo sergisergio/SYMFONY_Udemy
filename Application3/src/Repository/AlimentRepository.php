@@ -19,24 +19,12 @@ class AlimentRepository extends ServiceEntityRepository
         parent::__construct($registry, Aliment::class);
     }
 
-    // public function getAlimentParNbCalories($calorie)
-    // {
-    //     return $this->createQueryBuilder('a')
-    //         ->andWhere('a.calorie < :val')
-    //         ->setParameter('val', $calorie)
-    //         ->orderBy('a.id', 'ASC')
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;
-    // }
-
-    public function getAlimentParPropriété($propriete, $signe, $calorie) 
-    {
+    public function getAlimentParPropriete($propriete, $signe, $calorie){
         return $this->createQueryBuilder('a')
-            ->andWhere('a. '.$propriete. ' '. $signe .' :val')
-            ->setParameter('val', $calorie)
-            ->getQuery()
-            ->getResult()
+        ->andWhere('a.'.$propriete. ' '. $signe.' :val')
+        ->setParameter('val', $calorie)
+        ->getQuery()
+        ->getResult()
         ;
     }
 

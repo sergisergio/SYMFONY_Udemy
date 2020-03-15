@@ -5,60 +5,61 @@ namespace App\Controller\Admin;
 use App\Entity\Aliment;
 use App\Form\AlimentType;
 use App\Repository\AlimentRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminAlimentController extends AbstractController
 {
     /**
      * @Route("/admin/aliment", name="admin_aliment")
      */
-    public function index(AlimentRepository $repo)
+    public function index(AlimentRepository $respository)
     {
-        $aliments = $repo->findAll();
-        return $this->render('admin/admin_aliment/adminAliment.html.twig', [
-            'aliments' => $aliments,
+        $aliments = $respository->findAll();
+        return $this->render('admin/admin_aliment/adminAliment.html.twig',[
+            "aliments" => $aliments
         ]);
     }
 
     /**
-     * @Route("/admin/aliment/ajout", name="admin_aliments_creation")
-     * @Route("/admin/aliment/{id}", name="admin_aliments_modification", methods="GET|POST")
+     * @Route("/admin/aliment/creation", name="admin_aliment_creation")
+     * @Route("/admin/aliment/{id}", name="admin_aliment_modification", methods="GET|POST")
      */
-    public function ajoutETModif(Aliment $aliment = null, EntityManagerInterface $em, Request $request)
+    public function ajoutEtModif(Aliment $aliment = null, Request $request, ObjectManager $objectManager)
     {
         if(!$aliment) {
             $aliment = new Aliment();
         }
+
         $form = $this->createForm(AlimentType::class,$aliment);
+
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted() && $form->isValid()){
             $modif = $aliment->getId() !== null;
-            $em->persist($aliment);
-            $em->flush();
-            $this->addFlash("success", ($modif) ? "La modification a été effectuée" : "L'ajout a été effectué");
+            $objectManager->persist($aliment);
+            $objectManager->flush();
+            $this->addFlash("success", ($modif) ? "La modification a été effectuée" : "L'ajout a été effectuée");
             return $this->redirectToRoute("admin_aliment");
         }
-        return $this->render('admin/admin_aliment/modificationAliment.html.twig', [
-            'aliment' => $aliment,
-            'form'    => $form->createView(),
-            'isModification' => $aliment->getId() !== null
+
+        return $this->render('admin/admin_aliment/modifEtAjout.html.twig',[
+            "aliment" => $aliment,
+            "form" => $form->createView(),
+            "isModification" => $aliment->getId() !== null
         ]);
     }
 
-    /**
-     * @Route("/admin/aliment/{id}", name="admin_aliments_suppression", methods="delete")
+     /**
+     * @Route("/admin/aliment/{id}", name="admin_aliment_suppression", methods="delete")
      */
-    public function supprimer(Aliment $aliment, EntityManagerInterface $em) {
-        //$submittedToken = $request->request->get('token');
-        //if($this->isCsrfTokenValid("SUP". $aliment->getId(), $submittedToken)) {
-            $em->remove($aliment);
-            $em->flush();
-            $this->addFlash("success", "La suppression a été effectuée");
-            return $this->redirectToRoute("admin_aliment"); 
-        //}
+    public function suppression(Aliment $aliment, Request $request, ObjectManager $objectManager){
+        if($this->isCsrfTokenValid("SUP". $aliment->getId(),$request->get('_token'))){
+            $objectManager->remove($aliment);
+            $objectManager->flush();
+            $this->addFlash("success","La suppression a été effectuée");
+            return $this->redirectToRoute("admin_aliment");
+        }
     }
 }

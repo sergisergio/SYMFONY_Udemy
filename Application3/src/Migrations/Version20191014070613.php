@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200114064611 extends AbstractMigration
+final class Version20191014070613 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,7 @@ final class Version20200114064611 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE aliment ADD updated_at DATETIME NULL, CHANGE glucide glucide VARCHAR(255) NOT NULL');
+        $this->addSql('CREATE TABLE aliment (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, prix DOUBLE PRECISION NOT NULL, image VARCHAR(255) NOT NULL, calorie INT NOT NULL, proteine DOUBLE PRECISION NOT NULL, glucide DOUBLE PRECISION NOT NULL, lipide DOUBLE PRECISION NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +30,6 @@ final class Version20200114064611 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE aliment DROP updated_at, CHANGE glucide glucide DOUBLE PRECISION NOT NULL');
+        $this->addSql('DROP TABLE aliment');
     }
 }

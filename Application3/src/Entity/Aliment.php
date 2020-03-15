@@ -3,11 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AlimentRepository")
@@ -24,13 +23,13 @@ class Aliment
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=3,max=15,minMessage="le nom doit faire 3 caractères minimum",maxMessage="le nom doit faire moins de 15 caractères")
+     * @Assert\Length(min=3,max=15,minMessage="le nom doit faire 3 caractères minimum", maxMessage="Le nom doit faire moins de 15 caractères")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\Range(min=0.1,max=100,minMessage="Le prix doit être supérieur à 0.1",maxMessage="Le prix doit être inférieur à 100")
+     * @Assert\Range(min=0.1, max=100, minMessage="Le prix doit être supérieur à 0.1", maxMessage="Le prix doit être inférieur à 100")
      */
     private $prix;
 
@@ -40,9 +39,24 @@ class Aliment
     private $image;
 
     /**
-     * @Vich\UploadableField(mapping="aliment_images", fileNameProperty="image")
-     */
+    * @Vich\UploadableField(mapping="aliment_image", fileNameProperty="image")
+    */
     private $imageFile;
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): self
+    {
+        $this->imageFile = $imageFile;
+
+        if($this->imageFile instanceof UploadedFile){
+            $this->updated_at = new \DateTime('now');
+        }
+        return $this;
+    }
 
     /**
      * @ORM\Column(type="integer")
@@ -55,7 +69,7 @@ class Aliment
     private $proteine;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float")
      */
     private $glucide;
 
@@ -65,7 +79,7 @@ class Aliment
     private $lipide;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private $updated_at;
 
@@ -139,12 +153,12 @@ class Aliment
         return $this;
     }
 
-    public function getGlucide(): ?string
+    public function getGlucide(): ?float
     {
         return $this->glucide;
     }
 
-    public function setGlucide(string $glucide): self
+    public function setGlucide(float $glucide): self
     {
         $this->glucide = $glucide;
 
@@ -161,28 +175,6 @@ class Aliment
         $this->lipide = $lipide;
 
         return $this;
-    }
-
-    public function setImageFile(File $imageFile = null): self
-    {
-        $this->imageFile = $imageFile;
-        if ($this->imageFile instanceof UploadedFile) {
-            $this->updated_at = new \DateTime('now');
-        }
-        return $this;
-
-        // VERY IMPORTANT:
-        // It is required that at least one field changes if you are using Doctrine,
-        // otherwise the event listeners won't be called and the file is lost
-        //if ($image) {
-            // if 'updatedAt' is not defined in your entity, use another property
-            //$this->updatedAt = new \DateTime('now');
-        //}
-    }
-
-    public function getImageFile()
-    {
-        return $this->imageFile;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface

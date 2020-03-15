@@ -22,8 +22,8 @@ class AppFixtures extends Fixture
 
         $a2 = new Aliment();
         $a2->setNom("Patate")
-            ->setCalorie(80)
             ->setPrix(1.50)
+            ->setCalorie(80)
             ->setImage("aliments/patate.jpg")
             ->setProteine(1.80)
             ->setGlucide(16.7)
@@ -32,8 +32,8 @@ class AppFixtures extends Fixture
 
         $a3 = new Aliment();
         $a3->setNom("Tomate")
-            ->setCalorie(18)
             ->setPrix(2.30)
+            ->setCalorie(18)
             ->setImage("aliments/tomate.png")
             ->setProteine(0.86)
             ->setGlucide(2.26)
@@ -42,14 +42,14 @@ class AppFixtures extends Fixture
 
         $a4 = new Aliment();
         $a4->setNom("Pomme")
-            ->setCalorie(52)
             ->setPrix(2.35)
+            ->setCalorie(52)
             ->setImage("aliments/pomme.png")
             ->setProteine(0.25)
             ->setGlucide(11.6)
             ->setLipide(0.25);
         $manager->persist($a4);
-        
+
         $manager->flush();
     }
 }
